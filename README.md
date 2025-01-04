@@ -1,10 +1,10 @@
-# HeartRate-and-StepCount
+# HeartRate-and-StepCount Analysis
 
 ## Description
 
-This project is part of the **Sabanci University DSA210 Introduction to Data Science Course Fall 2024-2025 Term Project**. It analyzes my personal health data focusing on heart rate and step count collected through my Apple Watch.
+This project is part of the **Sabanci University DSA210 Introduction to Data Science Course Fall 2024-2025 Term Project**. It involves an in-depth analysis of my personal health data, specifically focusing on heart rate and step count metrics collected via my Apple Watch and iPhone.
 
-The analysis aims to uncover patterns in my daily activities, resting heart rate trends, and correlations between physical activity and heart rate. By examining this data, I hope to gain deeper insights into my physical health and lifestyle habits.
+The objective is to uncover patterns in daily activities, resting heart rate trends, and the correlation between physical activity and heart rate. By doing so, I aim to gain actionable insights into my lifestyle and physical health.
 
 ---
 
@@ -14,11 +14,7 @@ The analysis aims to uncover patterns in my daily activities, resting heart rate
 - [Tools](#tools)
 - [Data Source](#data-source)
 - [Data Processing](#data-processing)
-- [Data Visualizations](#data-visualizations)
-- [Data Analysis](#data-analysis)
-  - [Daily Trends](#daily-trends)
-  - [Heart Rate Variability](#heart-rate-variability)
-  - [Correlation Studies](#correlation-studies)
+- [Visualizations](#visualizations)
 - [Findings](#findings)
 - [Limitations](#limitations)
 - [Future Work](#future-work)
@@ -27,13 +23,11 @@ The analysis aims to uncover patterns in my daily activities, resting heart rate
 
 ## Motivation
 
-The motivation behind this project is to better understand my physical health and activity patterns by analyzing heart rate and step count data. Specifically, I aim to:
+The key motivations behind this project include:
 
-- Identify trends in my activity levels and resting heart rate over time.
-- Explore correlations between my physical activity (steps) and heart rate.
-- Investigate how my habits (exercise, rest, etc.) impact my overall health metrics.
-
-By analyzing this data, I hope to gain actionable insights into my daily routines and potential areas for improvement in my lifestyle.
+- Understanding activity levels and resting heart rate trends.
+- Exploring how physical activity affects cardiovascular health.
+- Gaining actionable insights for improving daily routines and lifestyle habits.
 
 ---
 
@@ -41,21 +35,28 @@ By analyzing this data, I hope to gain actionable insights into my daily routine
 
 The following tools and libraries were used in the project:
 
-- **Google Colab**: For coding, analysis, and documentation in a cloud-based environment.
-- **Pandas**: For data cleaning and processing.
-- **Matplotlib**: For data visualization.
-- **NumPy**: For numerical computations.
-- **Scipy**: For statistical analysis.
+- **Google Colab**: For cloud-based analysis and coding.
+- **Pandas**: For data cleaning, processing, and aggregation.
+- **Matplotlib**: For creating detailed visualizations.
+- **NumPy**: For numerical calculations and handling arrays.
+- **Math**: For numerical operations, such as rounding step counts and handling averages.
+- **Regular Expressions (re)**: For parsing raw RTF data and extracting meaningful content.
+- **Datetime**: For managing and manipulating time-series data within Pandas.
 
 ---
 
 ## Data Source
 
-The data was collected using my Apple Watch and exported from the Apple Health app. Since the raw data format from Apple Health is not user-friendly, I used third-party apps to convert it into a more manageable format for analysis. The processed data includes:
+The dataset consists of:
 
-- **Heart Rate Data**: Continuous measurements of heart rate at various intervals throughout the day.
-- **Step Count Data**: Aggregated daily total steps.
-- **Timestamps**: Datetime information for trend analysis and correlation studies.
+1. **Heart Rate Data**: Captured exclusively from the Apple Watch at regular intervals.
+2. **Step Count Data**: Aggregated step counts collected from both the Apple Watch and iPhone, requiring careful handling to avoid duplication.
+3. **Timestamps**: Used for synchronization and trend analysis.
+
+### Raw Data Format and Challenges:
+- The data was exported from the **Apple Health App** in RTF format, which is not user-friendly.
+- Heart rate data is device-specific (Apple Watch), whereas step count data is recorded from both the Apple Watch and iPhone. These dual sources introduce complexity in ensuring no duplication while aggregating data.
+- Recording intervals are inconsistent across devices, requiring conversion to consistent 10-minute periods for analysis.
 
 All preprocessed data can be found in the `data/` folder.
 
@@ -63,67 +64,81 @@ All preprocessed data can be found in the `data/` folder.
 
 ## Data Processing
 
-The raw data required significant cleaning and preprocessing. Steps included:
+Key steps in data processing:
 
-1. **Formatting Timestamps**: Standardizing timestamps for analysis.
-2. **Handling Missing Values**: Filling or removing gaps caused by device limitations or battery constraints.
-3. **Normalization**: Preparing the data for visualization and statistical analysis.
+1. **Parsing Raw Data**:
+   - Developed Python scripts to parse RTF files and convert them into structured CSV files for analysis.
+   - Timestamps were standardized to ensure consistent time-based operations.
 
-Details of these processes are documented in the `data_process.ipynb` file.
+2. **Handling Missing Data**:
+   - For heart rates: Missing values were interpolated using averages of the last 5, 4, 3, or 2 values to maintain meaningful trends.
+   - For step counts: Gaps were filled as zero, ensuring consistency without artificially inflating activity levels.
+
+3. **Avoiding Duplication**:
+   - Step count data from both the Apple Watch and iPhone was aggregated without duplication by aligning recording periods and redistributing overlapping data.
+
+4. **Time Aggregation**:
+   - Both datasets were synchronized into 10-minute intervals for accurate correlation analysis.
+
+5. **Filtering Static Data**:
+   - Periods with zero step counts or identical heart rates over 5 consecutive intervals were excluded to focus on dynamic data.
 
 ---
 
-## Data Visualizations
+## Visualizations
 
-Data visualization was performed using Matplotlib. These visualizations provided valuable insights into trends and patterns in the data. Visualizations include:
+### Daily Aggregated Trends
+- **Heart Rate and Step Counts**: Visualized as separate daily line graphs to observe high-level trends.
+- **Annotations**: Specific values highlighted for clarity.
 
-- Daily and weekly activity trends.
-- Resting heart rate trends.
-- Correlation heatmaps for heart rate and step counts.
+### Time-Series Correlation
+- **Step Count Intensity and Heart Rate**: Combined bar and scatter plots to showcase the interplay between physical activity and heart rate.
+- **Color Mapping**: Heart rate markers were color-coded based on step intensity.
 
-Static versions of these visualizations can be found in the `plots/` folder.
-
----
-
-## Data Analysis
-
-### Daily Trends
-Analyzed daily variations in step counts and heart rates to identify patterns in my activity levels and rest periods.
-
-### Heart Rate Variability
-Explored fluctuations in heart rate to understand the effects of different activities and rest periods on my cardiovascular health.
-
-### Correlation Studies
-Investigated the relationship between heart rate and step counts to determine how physical activity affects my heart rate metrics.
+### Weekly Highlights
+- Weekly trends and intra-day activity patterns were visualized for specific periods (e.g., October 4–6 and October 7–11).
 
 ---
 
 ## Findings
 
-Key findings from the analysis include:
-
-- Clear daily and weekly patterns in activity levels, with peak activity during certain hours.
-- Moderate correlation between step counts and heart rate during active hours.
-- Resting heart rate trends indicate consistent improvement over time, potentially reflecting better fitness levels.
+1. **Activity Peaks**: Higher step counts during specific periods correlated with increased heart rates.
+2. **Resting Trends**: Resting heart rates indicated consistent patterns, reflecting improved fitness over time.
+3. **Correlations**: Moderate correlations were identified between step intensity and heart rate metrics.
 
 ---
 
 ## Limitations
 
-### Data Source Limitations
-- **Battery Constraints**: The Apple Watch’s battery life limited data collection between **10 PM and 8 AM**, leading to gaps in nighttime heart rate and step data.
-- **Third-Party Apps**: Data conversion using third-party apps may have introduced minor inconsistencies.
+### Data Limitations
+- **Battery Constraints**: Charging periods resulted in data gaps.
+- **Data Aggregation**: Synchronizing step count data from two devices posed challenges in ensuring accuracy.
 
-### Personal Limitations
-- **Subjectivity**: As the dataset is personal, generalizability is limited.
-- **Privacy Concerns**: To protect privacy, certain sensitive data points were omitted from the analysis.
+### Analytical Constraints
+- **Personal Dataset**: Results are not generalizable to broader populations.
 
 ---
 
 ## Future Work
 
-- **Incorporate Additional Metrics**: Expand the dataset to include **calorie burn** for a more comprehensive analysis of physical activity.
-- **Explore Phone Usage Data**: Investigate correlations between screen usage time (collected from phone settings) and activity levels. Since prolonged phone usage may correspond to sedentary periods, it could provide additional insights. However, this step may be excluded if extracting screen usage data proves to be too challenging.
-- **Fill Data Gaps**: Explore alternative methods to collect continuous data during charging periods.
+1. **Expand Metrics**: Include additional data like calorie burn and sleep patterns. (Not Possible to record sleep patterns since Battery of Apple Watch, our recorder has a constraint)
+2. **Combine Data Sources**: Integrate phone usage and other lifestyle metrics for a holistic view. (Planned to take recordings from iPhone -> Settings -> Screen Time, but on my personal phone this settings was OFF position on October 2024)
+
+---
+
+## Contributions
+
+1. **Raw Data Handling**:
+   - Developed scripts to parse raw RTF data from the Apple Health app into structured CSV files.
+   - Addressed challenges in synchronizing multi-device data.
+
+2. **Exploration of Trends**:
+   - Analyzed correlations between physical activity and heart rate trends over time.
+
+3. **Visualization Techniques**:
+   - Created detailed charts and graphs to highlight relationships between activity and cardiovascular health.
+
+4. **Data Cleaning and Filtering**:
+   - Enhanced the accuracy and usability of raw health data for meaningful analysis.
 
 ---
